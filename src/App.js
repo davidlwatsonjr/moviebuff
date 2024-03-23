@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
@@ -23,17 +23,30 @@ function App() {
   const [queryTerm, setQueryTerm] = useState("");
   const [movieList, setMovieList] = useState({});
 
+  const loadMovieList = useCallback(async (queryTerm) => {
+    const searchParams = new URLSearchParams({
+      query_term: queryTerm,
+      sort_by: "date_added",
+      order_by: "desc",
+    });
+    const url = `${MOVIES_API_URL}?${searchParams}`;
+    const moviesResponse = await fetch(url);
+    const movies = await moviesResponse.json();
+    setMovieList(movies);
+  }, []);
+
   const handleQueryTermChange = (event) => {
     setQueryTerm(event.target.value);
   };
 
   const handleSearch = async () => {
     setMovieList({});
-    const url = `${MOVIES_API_URL}?query_term=${queryTerm}`;
-    const moviesResponse = await fetch(url);
-    const movies = await moviesResponse.json();
-    setMovieList(movies);
+    loadMovieList(queryTerm);
   };
+
+  useEffect(() => {
+    loadMovieList("");
+  }, [loadMovieList]);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -58,7 +71,12 @@ function App() {
         <ul>
           {movieList?.undownloadedAvailableMovies?.map((movie) => (
             <li key={movie.url}>
-              <a href={movie.url} target="_blank" rel="noopener noreferrer">
+              <a
+                href={movie.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={movie.date_uploaded_unix}
+              >
                 {movie.title}
               </a>{" "}
               ({movie.year})
