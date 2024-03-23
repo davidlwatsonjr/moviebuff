@@ -28,6 +28,7 @@ function App() {
   };
 
   const handleSearch = async () => {
+    setMovieList({});
     const url = `${MOVIES_API_URL}?query_term=${queryTerm}`;
     const moviesResponse = await fetch(url);
     const movies = await moviesResponse.json();
@@ -47,6 +48,7 @@ function App() {
           onKeyUp={(event) => {
             if (event.key === "Enter") {
               handleSearch();
+              event.target.select();
             }
           }}
         />
@@ -56,7 +58,10 @@ function App() {
         <ul>
           {movieList?.undownloadedAvailableMovies?.map((movie) => (
             <li key={movie.url}>
-              {movie.title} ({movie.year})
+              <a href={movie.url} target="_blank" rel="noopener noreferrer">
+                {movie.title}
+              </a>{" "}
+              ({movie.year})
             </li>
           ))}
         </ul>
