@@ -1,0 +1,23 @@
+.MovieList {
+  list-style: none;
+  padding: 0;
+}
+
+.MovieListItem {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 4px;
+}
+
+.MovieListInfo {
+  text-align: left;
+}
+
+.MovieListInfo a {
+  margin-inline-end: 4px;
+}
+
+.MovieListItemActions {
+  white-space: nowrap;
+}
