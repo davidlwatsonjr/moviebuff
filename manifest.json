@@ -1,6 +1,7 @@
 {
-  "short_name": "Movie Buff",
   "name": "Movie Buff",
+  "short_name": "Movie Buff",
+  "description": "Movie Buff shows you what's available to watch right now!",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#121212",
+  "background_color": "#121212"
 }
