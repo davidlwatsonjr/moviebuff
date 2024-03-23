@@ -5,6 +5,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import "./MovieList.css";
+import DownloadLinks from "../DownloadLinks/DownloadLinks";
 
 function MovieList({ movies }) {
   return (
@@ -33,9 +34,7 @@ function MovieList({ movies }) {
                 {movie.rating}/10
               </>
             }
-            secondary={`${
-              movie.highestQualityTorrent?.quality
-            }.${movie.highestQualityTorrent?.type?.toUpperCase()}`}
+            secondary={<DownloadLinks links={movie.torrents} />}
           ></ListItemText>
         </ListItem>
       ))}
