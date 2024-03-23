@@ -44,6 +44,11 @@ function App() {
           fullWidth
           placeholder="Search movies..."
           onChange={handleQueryTermChange}
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
         <Button variant="contained" color="primary" onClick={handleSearch}>
           Search
