@@ -40,6 +40,7 @@ function App() {
   const [movies, setMovies] = useState(
     JSON.parse(localStorage.getItem("movies")) || [],
   );
+  const [plexMovies, setPlexMovies] = useState([]);
 
   const loadMovieList = useCallback(async (queryTerm) => {
     setIsLoading(true);
@@ -50,8 +51,9 @@ function App() {
     });
     const url = `${MOVIES_API_URL}?${searchParams}`;
     const moviesResponse = await fetch(url);
-    const { movies } = await moviesResponse.json();
+    const { movies, plexMovies } = await moviesResponse.json();
     setMovies(movies);
+    setPlexMovies(plexMovies);
     if (!queryTerm) {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
@@ -99,14 +101,15 @@ function App() {
             Search
           </Button>
         </Stack>
-        {Array.isArray(movies?.plexMovies) && movies.plexMovies.length > 0 && (
+        <MovieList movies={movies} />
+        {plexMovies.length > 0 && (
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               Plex Movies
             </AccordionSummary>
             <AccordionDetails>
               <List>
-                {movies?.plexMovies?.map((movie) => (
+                {plexMovies.map((movie) => (
                   <ListItem key={movie.url} disableGutters>
                     <ListItemText
                       primary={
@@ -122,7 +125,6 @@ function App() {
             </AccordionDetails>
           </Accordion>
         )}
-        <MovieList movies={movies} />
         <Footer />
       </Container>
     </ThemeProvider>
