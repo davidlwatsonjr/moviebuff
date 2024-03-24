@@ -4,6 +4,8 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -16,6 +18,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -40,18 +44,32 @@ function App() {
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [queryTerm, setQueryTerm] = useState("");
+  const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
+  const [sortBy, setSortBy] = useState("date_added");
+  const [orderBy, setOrderBy] = useState("desc");
   const [movies, setMovies] = useState(
     JSON.parse(localStorage.getItem("movies")) || [],
   );
   const [plexMovies, setPlexMovies] = useState([]);
 
-  const loadMovieList = useCallback(async (queryTerm = "") => {
+  const sortByOptions = [
+    { value: "title", text: "Title", defaultOrderBy: "asc" },
+    { value: "year", text: "Year", defaultOrderBy: "desc" },
+    { value: "rating", text: "Rating", defaultOrderBy: "desc" },
+    { value: "peers", text: "Peers", defaultOrderBy: "desc" },
+    { value: "seeds", text: "Seeds", defaultOrderBy: "desc" },
+    { value: "download_count", text: "Download Count", defaultOrderBy: "desc" },
+    { value: "like_count", text: "Like Count", defaultOrderBy: "desc" },
+    { value: "date_added", text: "Date Added", defaultOrderBy: "desc" },
+  ];
+
+  const loadMovieList = useCallback(async () => {
     setIsLoading(true);
 
     const searchParams = new URLSearchParams({
-      query_term: queryTerm,
-      sort_by: "date_added",
-      order_by: "desc",
+      query_term: searchedQueryTerm,
+      sort_by: sortBy,
+      order_by: orderBy,
     });
     const url = `${MOVIES_API_URL}?${searchParams}`;
 
@@ -70,17 +88,17 @@ function App() {
     setMovies(movies);
     setPlexMovies(plexMovies);
 
-    if (!queryTerm) {
+    if (!searchedQueryTerm) {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
     setIsLoading(false);
-  }, []);
+  }, [searchedQueryTerm, sortBy, orderBy]);
 
   useEffect(() => {
     if (alertMessage) {
       setTimeout(() => {
         setAlertMessage("");
-      }, 500000);
+      }, 5000);
     }
   }, [alertMessage]);
 
@@ -89,7 +107,17 @@ function App() {
   };
 
   const handleSearch = async () => {
-    loadMovieList(queryTerm);
+    setSearchedQueryTerm(queryTerm);
+  };
+
+  const handleSortByChange = (sortByOption) => {
+    if (sortByOption.value === sortBy) {
+      setOrderBy(orderBy === "asc" ? "desc" : "asc");
+    } else {
+      setOrderBy(sortByOption.defaultOrderBy);
+    }
+
+    setSortBy(sortByOption.value);
   };
 
   useEffect(() => {
@@ -124,6 +152,27 @@ function App() {
           <Button variant="contained" color="primary" onClick={handleSearch}>
             Search
           </Button>
+        </Stack>
+        <Stack spacing={2} direction="row" justifyContent="end" marginTop={2}>
+          <Select value={sortBy}>
+            {sortByOptions.map((option) => {
+              const DirectionIcon =
+                orderBy === "asc" ? ArrowUpwardIcon : ArrowDownwardIcon;
+
+              return (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  onClick={() => handleSortByChange(option)}
+                >
+                  {option.text}{" "}
+                  {option.value === sortBy ? (
+                    <DirectionIcon fontSize="inherit" />
+                  ) : null}
+                </MenuItem>
+              );
+            })}
+          </Select>
         </Stack>
         <MovieList movies={movies} />
         {plexMovies.length > 0 && (
