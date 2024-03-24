@@ -36,7 +36,9 @@ const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [queryTerm, setQueryTerm] = useState("");
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState(
+    JSON.parse(localStorage.getItem("movies")) || [],
+  );
 
   const loadMovieList = useCallback(async (queryTerm) => {
     setIsLoading(true);
@@ -49,6 +51,9 @@ function App() {
     const moviesResponse = await fetch(url);
     const { movies } = await moviesResponse.json();
     setMovies(movies);
+    if (!queryTerm) {
+      localStorage.setItem("movies", JSON.stringify(movies));
+    }
     setIsLoading(false);
   }, []);
 
@@ -57,7 +62,6 @@ function App() {
   };
 
   const handleSearch = async () => {
-    setMovies([]);
     loadMovieList(queryTerm);
   };
 
