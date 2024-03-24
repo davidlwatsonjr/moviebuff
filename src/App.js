@@ -7,6 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -36,29 +37,52 @@ const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const [queryTerm, setQueryTerm] = useState("");
   const [movies, setMovies] = useState(
     JSON.parse(localStorage.getItem("movies")) || [],
   );
   const [plexMovies, setPlexMovies] = useState([]);
 
-  const loadMovieList = useCallback(async (queryTerm) => {
+  const loadMovieList = useCallback(async (queryTerm = "") => {
     setIsLoading(true);
+
     const searchParams = new URLSearchParams({
       query_term: queryTerm,
       sort_by: "date_added",
       order_by: "desc",
     });
     const url = `${MOVIES_API_URL}?${searchParams}`;
-    const moviesResponse = await fetch(url);
+
+    let moviesResponse;
+    try {
+      moviesResponse = await fetch(url);
+    } catch (error) {
+      console.error(error);
+      setAlertMessage("An error occurred while loading the movie list.");
+      setAlertSeverity("error");
+      setIsLoading(false);
+      return;
+    }
+
     const { movies, plexMovies } = await moviesResponse.json();
     setMovies(movies);
     setPlexMovies(plexMovies);
+
     if (!queryTerm) {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (alertMessage) {
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 500000);
+    }
+  }, [alertMessage]);
 
   const handleQueryTermChange = (event) => {
     setQueryTerm(event.target.value);
@@ -69,7 +93,7 @@ function App() {
   };
 
   useEffect(() => {
-    loadMovieList("");
+    loadMovieList();
   }, [loadMovieList]);
 
   return (
@@ -124,6 +148,27 @@ function App() {
               </List>
             </AccordionDetails>
           </Accordion>
+        )}
+        {alertMessage && (
+          <Box
+            padding={2}
+            maxWidth="md"
+            sx={{
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              margin: "auto",
+            }}
+          >
+            <Alert
+              severity={alertSeverity}
+              variant="filled"
+              onClose={() => setAlertMessage("")}
+            >
+              {alertMessage}
+            </Alert>
+          </Box>
         )}
         <Footer />
       </Container>
