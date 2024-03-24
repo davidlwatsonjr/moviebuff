@@ -3,10 +3,17 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -82,6 +89,29 @@ function App() {
           </Button>
         </Stack>
         {isLoading && <CircularProgress sx={{ marginTop: 2 }} />}
+        {Array.isArray(movies?.plexMovies) && movies.plexMovies.length > 0 && (
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              Plex Movies
+            </AccordionSummary>
+            <AccordionDetails>
+              <List>
+                {movies?.plexMovies?.map((movie) => (
+                  <ListItem key={movie.url} disableGutters>
+                    <ListItemText
+                      primary={
+                        <>
+                          {movie.title} ({movie.year}){" - "}
+                          {movie.audienceRating}/10
+                        </>
+                      }
+                    ></ListItemText>
+                  </ListItem>
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        )}
         <MovieList movies={movies} />
         <Footer />
       </Container>
