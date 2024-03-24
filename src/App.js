@@ -36,7 +36,7 @@ const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [queryTerm, setQueryTerm] = useState("");
-  const [movies, setMovies] = useState({});
+  const [movies, setMovies] = useState([]);
 
   const loadMovieList = useCallback(async (queryTerm) => {
     setIsLoading(true);
@@ -47,7 +47,8 @@ function App() {
     });
     const url = `${MOVIES_API_URL}?${searchParams}`;
     const moviesResponse = await fetch(url);
-    setMovies(await moviesResponse.json());
+    const { movies } = await moviesResponse.json();
+    setMovies(movies);
     setIsLoading(false);
   }, []);
 
@@ -56,7 +57,7 @@ function App() {
   };
 
   const handleSearch = async () => {
-    setMovies({});
+    setMovies([]);
     loadMovieList(queryTerm);
   };
 

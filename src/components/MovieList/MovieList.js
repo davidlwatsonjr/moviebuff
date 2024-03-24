@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import CheckIcon from "@mui/icons-material/Check";
 import Avatar from "@mui/material/Avatar";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
@@ -10,7 +11,7 @@ import DownloadLinks from "../DownloadLinks/DownloadLinks";
 function MovieList({ movies }) {
   return (
     <List>
-      {movies?.undownloadedAvailableMovies?.map((movie) => (
+      {movies?.map?.((movie) => (
         <ListItem key={movie.url} disableGutters>
           <ListItemAvatar>
             <Avatar
@@ -37,6 +38,7 @@ function MovieList({ movies }) {
             }
             secondary={<DownloadLinks links={movie.torrents} />}
           ></ListItemText>
+          {movie.plexEquivalent && <CheckIcon color="success" />}
         </ListItem>
       ))}
     </List>
