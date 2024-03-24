@@ -90,7 +90,7 @@ function App() {
         </Stack>
         {isLoading && <CircularProgress sx={{ marginTop: 2 }} />}
         {Array.isArray(movies?.plexMovies) && movies.plexMovies.length > 0 && (
-          <Accordion>
+          <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               Plex Movies
             </AccordionSummary>
