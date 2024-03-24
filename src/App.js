@@ -56,9 +56,6 @@ function App() {
     { value: "title", text: "Title", defaultOrderBy: "asc" },
     { value: "year", text: "Year", defaultOrderBy: "desc" },
     { value: "rating", text: "Rating", defaultOrderBy: "desc" },
-    { value: "peers", text: "Peers", defaultOrderBy: "desc" },
-    { value: "seeds", text: "Seeds", defaultOrderBy: "desc" },
-    { value: "download_count", text: "Download Count", defaultOrderBy: "desc" },
     { value: "like_count", text: "Like Count", defaultOrderBy: "desc" },
     { value: "date_added", text: "Date Added", defaultOrderBy: "desc" },
   ];
