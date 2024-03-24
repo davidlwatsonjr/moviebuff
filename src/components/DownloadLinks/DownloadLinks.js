@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import { Chip, Stack } from "@mui/material";
-import "./DownloadLinks.css";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 function DownloadLinks({ links }) {
   const handleLinkClick = (link) => {

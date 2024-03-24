@@ -1,12 +1,20 @@
-import "./Footer.css";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 
 function Footer() {
   return (
-    <footer className="Footer">
-      <p>
-        A <a href="https://davidlwatsonjr.com">davidlwatsonjr</a> production.
-      </p>
-    </footer>
+    <Box component="footer">
+      A{" "}
+      <Link
+        underline="hover"
+        href="https://davidlwatsonjr.com"
+        target="_blank"
+        rel="noreferrer"
+      >
+        davidlwatsonjr
+      </Link>{" "}
+      production.
+    </Box>
   );
 }
 

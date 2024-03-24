@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import Avatar from "@mui/material/Avatar";
+import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -22,14 +23,15 @@ function MovieList({ movies }) {
           <ListItemText
             primary={
               <>
-                <a
+                <Link
                   href={movie.url}
+                  underline="hover"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noreferrer"
                   title={movie.date_uploaded}
                 >
                   {movie.title}
-                </a>{" "}
+                </Link>{" "}
                 ({movie.year}-{movie.language}){" - "}
                 {movie.rating}/10
               </>
