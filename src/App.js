@@ -7,10 +7,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
+import LinearProgress from "@mui/material/LinearProgress";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -72,6 +73,11 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline enableColorScheme />
+      {isLoading && (
+        <Box position="fixed" top={0} left={0} right={0}>
+          <LinearProgress />
+        </Box>
+      )}
       <Container maxWidth="md" sx={{ textAlign: "center" }}>
         <Typography component="h1" variant="h4" padding={2}>
           Movie List
@@ -93,7 +99,6 @@ function App() {
             Search
           </Button>
         </Stack>
-        {isLoading && <CircularProgress sx={{ marginTop: 2 }} />}
         {Array.isArray(movies?.plexMovies) && movies.plexMovies.length > 0 && (
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
