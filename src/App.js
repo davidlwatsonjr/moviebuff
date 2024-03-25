@@ -47,14 +47,18 @@ const SORT_BY_OPTIONS = [
   { value: "date_added", text: "Date Added", defaultOrderBy: "desc" },
 ];
 
+const DEFAULT_QUERY_TERM = "";
+const DEFAULT_SORT_BY = "date_added";
+const DEFAULT_ORDER_BY = "desc";
+
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [queryTerm, setQueryTerm] = useState("");
+  const [queryTerm, setQueryTerm] = useState(DEFAULT_QUERY_TERM);
   const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
-  const [sortBy, setSortBy] = useState("date_added");
-  const [orderBy, setOrderBy] = useState("desc");
+  const [sortBy, setSortBy] = useState(DEFAULT_SORT_BY);
+  const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
   const [movies, setMovies] = useState(
     JSON.parse(localStorage.getItem("movies")) || [],
   );
@@ -85,7 +89,11 @@ function App() {
     setMovies(movies);
     setPlexMovies(plexMovies);
 
-    if (!searchedQueryTerm) {
+    if (
+      searchedQueryTerm === DEFAULT_QUERY_TERM &&
+      sortBy === DEFAULT_SORT_BY &&
+      orderBy === DEFAULT_ORDER_BY
+    ) {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
     setIsLoading(false);
