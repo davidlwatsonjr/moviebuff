@@ -39,6 +39,14 @@ const darkTheme = createTheme({
 
 const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
 
+const SORT_BY_OPTIONS = [
+  { value: "title", text: "Title", defaultOrderBy: "asc" },
+  { value: "year", text: "Year", defaultOrderBy: "desc" },
+  { value: "rating", text: "Rating", defaultOrderBy: "desc" },
+  { value: "like_count", text: "Like Count", defaultOrderBy: "desc" },
+  { value: "date_added", text: "Date Added", defaultOrderBy: "desc" },
+];
+
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("");
@@ -51,14 +59,6 @@ function App() {
     JSON.parse(localStorage.getItem("movies")) || [],
   );
   const [plexMovies, setPlexMovies] = useState([]);
-
-  const sortByOptions = [
-    { value: "title", text: "Title", defaultOrderBy: "asc" },
-    { value: "year", text: "Year", defaultOrderBy: "desc" },
-    { value: "rating", text: "Rating", defaultOrderBy: "desc" },
-    { value: "like_count", text: "Like Count", defaultOrderBy: "desc" },
-    { value: "date_added", text: "Date Added", defaultOrderBy: "desc" },
-  ];
 
   const loadMovieList = useCallback(async () => {
     setIsLoading(true);
@@ -152,7 +152,7 @@ function App() {
         </Stack>
         <Stack spacing={2} direction="row" justifyContent="end" marginTop={2}>
           <Select value={sortBy}>
-            {sortByOptions.map((option) => {
+            {SORT_BY_OPTIONS.map((option) => {
               const DirectionIcon =
                 orderBy === "asc" ? ArrowUpwardIcon : ArrowDownwardIcon;
 
