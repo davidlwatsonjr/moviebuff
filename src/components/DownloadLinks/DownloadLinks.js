@@ -9,7 +9,7 @@ function DownloadLinks({ links }) {
 
   return (
     <Stack direction="row" spacing={1}>
-      {links.map((link) => (
+      {links.slice(0, 2).map((link) => (
         <Chip
           key={link.url}
           label={`${link.quality}.${link.type.toUpperCase()}`}
