@@ -39,6 +39,37 @@ const darkTheme = createTheme({
 
 const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
 
+const GENRE_OPTIONS = [
+  { value: "DEFAULT", text: "All" },
+  { value: "Action", text: "Action" },
+  { value: "Adventure", text: "Adventure" },
+  { value: "Animation", text: "Animation" },
+  { value: "Biography", text: "Biography" },
+  { value: "Comedy", text: "Comedy" },
+  { value: "Crime", text: "Crime" },
+  { value: "Documentary", text: "Documentary" },
+  { value: "Drama", text: "Drama" },
+  { value: "Family", text: "Family" },
+  { value: "Fantasy", text: "Fantasy" },
+  { value: "Film-Noir", text: "Film Noir" },
+  { value: "Game-Show", text: "Game Show" },
+  { value: "History", text: "History" },
+  { value: "Horror", text: "Horror" },
+  { value: "Music", text: "Music" },
+  { value: "Musical", text: "Musical" },
+  { value: "Mystery", text: "Mystery" },
+  { value: "News", text: "News" },
+  { value: "Reality-TV", text: "Reality TV" },
+  { value: "Romance", text: "Romance" },
+  { value: "Sci-Fi", text: "Sci-Fi" },
+  { value: "Short", text: "Short" },
+  { value: "Sport", text: "Sport" },
+  { value: "Talk-Show", text: "Talk Show" },
+  { value: "Thriller", text: "Thriller" },
+  { value: "War", text: "War" },
+  { value: "Western", text: "Western" },
+];
+
 const SORT_BY_OPTIONS = [
   { value: "title", text: "Title", defaultOrderBy: "asc" },
   { value: "year", text: "Year", defaultOrderBy: "desc" },
@@ -48,6 +79,7 @@ const SORT_BY_OPTIONS = [
 ];
 
 const DEFAULT_QUERY_TERM = "";
+const DEFAULT_GENRE = "";
 const DEFAULT_SORT_BY = "date_added";
 const DEFAULT_ORDER_BY = "desc";
 
@@ -57,6 +89,7 @@ function App() {
   const [alertMessage, setAlertMessage] = useState("");
   const [queryTerm, setQueryTerm] = useState(DEFAULT_QUERY_TERM);
   const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
+  const [genre, setGenre] = useState(DEFAULT_GENRE);
   const [sortBy, setSortBy] = useState(DEFAULT_SORT_BY);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
   const [movies, setMovies] = useState(
@@ -69,6 +102,7 @@ function App() {
 
     const searchParams = new URLSearchParams({
       query_term: searchedQueryTerm,
+      genre: genre === "DEFAULT" ? "" : genre,
       sort_by: sortBy,
       order_by: orderBy,
     });
@@ -91,13 +125,14 @@ function App() {
 
     if (
       searchedQueryTerm === DEFAULT_QUERY_TERM &&
+      genre === DEFAULT_GENRE &&
       sortBy === DEFAULT_SORT_BY &&
       orderBy === DEFAULT_ORDER_BY
     ) {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
     setIsLoading(false);
-  }, [searchedQueryTerm, sortBy, orderBy]);
+  }, [searchedQueryTerm, genre, sortBy, orderBy]);
 
   useEffect(() => {
     if (alertMessage) {
@@ -113,6 +148,10 @@ function App() {
 
   const handleSearch = async () => {
     setSearchedQueryTerm(queryTerm);
+  };
+
+  const handleGenreChange = (genreOption) => {
+    setGenre(genreOption.value);
   };
 
   const handleSortByChange = (sortByOption) => {
@@ -159,6 +198,19 @@ function App() {
           </Button>
         </Stack>
         <Stack spacing={2} direction="row" justifyContent="end" marginTop={2}>
+          <Select value={genre}>
+            {GENRE_OPTIONS.map((option) => {
+              return (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  onClick={() => handleGenreChange(option)}
+                >
+                  {option.text}
+                </MenuItem>
+              );
+            })}
+          </Select>
           <Select value={sortBy}>
             {SORT_BY_OPTIONS.map((option) => {
               const DirectionIcon =
