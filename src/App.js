@@ -39,6 +39,10 @@ const darkTheme = createTheme({
 
 const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
 
+const MINIMUM_RATING_OPTIONS = Array(10)
+  .fill()
+  .map((_, i) => ({ value: i, text: `⭐ ${i}.0+` }));
+
 const GENRE_OPTIONS = [
   { value: "DEFAULT", text: "All" },
   { value: "Action", text: "Action" },
@@ -79,6 +83,7 @@ const SORT_BY_OPTIONS = [
 ];
 
 const DEFAULT_QUERY_TERM = "";
+const DEFAULT_MINIMUM_RATING = 0;
 const DEFAULT_GENRE = "DEFAULT";
 const DEFAULT_SORT_BY = "date_added";
 const DEFAULT_ORDER_BY = "desc";
@@ -89,6 +94,7 @@ function App() {
   const [alertMessage, setAlertMessage] = useState("");
   const [queryTerm, setQueryTerm] = useState(DEFAULT_QUERY_TERM);
   const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
+  const [minimumRating, setMinimumRating] = useState(DEFAULT_MINIMUM_RATING);
   const [genre, setGenre] = useState(DEFAULT_GENRE);
   const [sortBy, setSortBy] = useState(DEFAULT_SORT_BY);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
@@ -102,6 +108,7 @@ function App() {
 
     const searchParams = new URLSearchParams({
       query_term: searchedQueryTerm,
+      minimum_rating: minimumRating,
       genre: genre === "DEFAULT" ? "" : genre,
       sort_by: sortBy,
       order_by: orderBy,
@@ -125,6 +132,7 @@ function App() {
 
     if (
       searchedQueryTerm === DEFAULT_QUERY_TERM &&
+      minimumRating === DEFAULT_MINIMUM_RATING &&
       genre === DEFAULT_GENRE &&
       sortBy === DEFAULT_SORT_BY &&
       orderBy === DEFAULT_ORDER_BY
@@ -132,7 +140,7 @@ function App() {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
     setIsLoading(false);
-  }, [searchedQueryTerm, genre, sortBy, orderBy]);
+  }, [searchedQueryTerm, minimumRating, genre, sortBy, orderBy]);
 
   useEffect(() => {
     if (alertMessage) {
@@ -148,6 +156,10 @@ function App() {
 
   const handleSearch = async () => {
     setSearchedQueryTerm(queryTerm);
+  };
+
+  const handleMinimumRatingChange = (minimumRatingOption) => {
+    setMinimumRating(minimumRatingOption.value);
   };
 
   const handleGenreChange = (genreOption) => {
@@ -205,6 +217,19 @@ function App() {
                   key={option.value}
                   value={option.value}
                   onClick={() => handleGenreChange(option)}
+                >
+                  {option.text}
+                </MenuItem>
+              );
+            })}
+          </Select>
+          <Select value={minimumRating}>
+            {MINIMUM_RATING_OPTIONS.map((option) => {
+              return (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  onClick={() => handleMinimumRatingChange(option)}
                 >
                   {option.text}
                 </MenuItem>

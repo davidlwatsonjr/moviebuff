@@ -32,8 +32,7 @@ function MovieList({ movies }) {
                 >
                   {movie.title}
                 </Link>{" "}
-                ({movie.year}-{movie.language}){" - "}
-                {movie.rating}/10
+                ({movie.year}-{movie.language}) ⭐ {movie.rating}
               </>
             }
             secondary={<DownloadLinks links={movie.torrents} />}
