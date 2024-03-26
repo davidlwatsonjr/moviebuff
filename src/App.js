@@ -79,7 +79,7 @@ const SORT_BY_OPTIONS = [
 ];
 
 const DEFAULT_QUERY_TERM = "";
-const DEFAULT_GENRE = "";
+const DEFAULT_GENRE = "DEFAULT";
 const DEFAULT_SORT_BY = "date_added";
 const DEFAULT_ORDER_BY = "desc";
 
