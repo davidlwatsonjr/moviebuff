@@ -3,9 +3,11 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -27,6 +29,15 @@ import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import createTheme from "@mui/material/styles/createTheme";
 import Footer from "./components/Footer/Footer";
 import MovieList from "./components/MovieList/MovieList";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  InputLabel,
+} from "@mui/material";
 
 const darkTheme = createTheme({
   palette: {
@@ -92,6 +103,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [queryTerm, setQueryTerm] = useState(DEFAULT_QUERY_TERM);
   const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
   const [minimumRating, setMinimumRating] = useState(DEFAULT_MINIMUM_RATING);
@@ -210,32 +222,88 @@ function App() {
           </Button>
         </Stack>
         <Stack spacing={2} direction="row" justifyContent="end" marginTop={2}>
-          <Select value={genre}>
-            {GENRE_OPTIONS.map((option) => {
-              return (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  onClick={() => handleGenreChange(option)}
-                >
-                  {option.text}
-                </MenuItem>
-              );
-            })}
-          </Select>
-          <Select value={minimumRating}>
-            {MINIMUM_RATING_OPTIONS.map((option) => {
-              return (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  onClick={() => handleMinimumRatingChange(option)}
-                >
-                  {option.text}
-                </MenuItem>
-              );
-            })}
-          </Select>
+          <Button
+            variant="outlined"
+            startIcon={<FilterListIcon />}
+            onClick={() => setIsFilterDialogOpen(true)}
+          >
+            Filters
+          </Button>
+          <Dialog
+            fullScreen
+            open={isFilterDialogOpen}
+            onClose={() => setIsFilterDialogOpen(false)}
+          >
+            <DialogTitle>Filters</DialogTitle>
+            <IconButton
+              aria-label="close"
+              onClick={() => setIsFilterDialogOpen(false)}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <DialogContent>
+              <List>
+                <ListItem>
+                  <FormControl fullWidth>
+                    <InputLabel id="genre-select-label">Genre</InputLabel>
+                    <Select
+                      value={genre}
+                      label="Genre"
+                      labelId="genre-select-label"
+                    >
+                      {GENRE_OPTIONS.map((option) => {
+                        return (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            onClick={() => handleGenreChange(option)}
+                          >
+                            {option.text}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </ListItem>
+                <ListItem>
+                  <FormControl fullWidth>
+                    <InputLabel id="minimum_rating-select-label">
+                      Minimum Rating
+                    </InputLabel>
+                    <Select
+                      value={minimumRating}
+                      fullWidth
+                      label="Minimum Rating"
+                      labelId="minimum_rating-select-label"
+                    >
+                      {MINIMUM_RATING_OPTIONS.map((option) => {
+                        return (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            onClick={() => handleMinimumRatingChange(option)}
+                          >
+                            {option.text}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </ListItem>
+              </List>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setIsFilterDialogOpen(false)}>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
           <Select value={sortBy}>
             {SORT_BY_OPTIONS.map((option) => {
               const DirectionIcon =
