@@ -66,6 +66,30 @@ const FilterDialog = ({
             </FormControl>
           </ListItem>
         )}
+        {languages && onLanguageChange && (
+          <ListItem>
+            <FormControl fullWidth>
+              <InputLabel id="language-select-label">Language</InputLabel>
+              <Select
+                value={selectedLanguage}
+                label="Language"
+                labelId="language-select-label"
+              >
+                {languages.map((option) => {
+                  return (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      onClick={() => onLanguageChange(option.value)}
+                    >
+                      {option.text}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </ListItem>
+        )}
         {ratings && onMinimumRatingChange && (
           <ListItem>
             <FormControl fullWidth>
@@ -84,30 +108,6 @@ const FilterDialog = ({
                       key={option.value}
                       value={option.value}
                       onClick={() => onMinimumRatingChange(option.value)}
-                    >
-                      {option.text}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </ListItem>
-        )}
-        {languages && onLanguageChange && (
-          <ListItem>
-            <FormControl fullWidth>
-              <InputLabel id="language-select-label">Language</InputLabel>
-              <Select
-                value={selectedLanguage}
-                label="Language"
-                labelId="language-select-label"
-              >
-                {languages.map((option) => {
-                  return (
-                    <MenuItem
-                      key={option.value}
-                      value={option.value}
-                      onClick={() => onLanguageChange(option.value)}
                     >
                       {option.text}
                     </MenuItem>
