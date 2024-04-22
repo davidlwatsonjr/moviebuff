@@ -271,28 +271,40 @@ const SORT_BY_OPTIONS = [
   { value: "date_added", text: "Date Added", defaultOrderBy: "desc" },
 ];
 
-const DEFAULT_QUERY_TERM = "";
-const DEFAULT_MINIMUM_RATING = 0;
-const DEFAULT_GENRE = "DEFAULT";
-const DEFAULT_LANGUAGE = "DEFAULT";
-const DEFAULT_SORT_BY = "date_added";
-const DEFAULT_ORDER_BY = "desc";
+const defaultFilters = {
+  minimumRating: 0,
+  genre: "DEFAULT",
+  language: "DEFAULT",
+  sortBy: "date_added",
+  orderBy: "desc",
+};
+
+const persistedFilters = {
+  ...defaultFilters,
+  ...(JSON.parse(localStorage.getItem("movieBuffFilters")) || {}),
+};
+const persistFilters = (filters) =>
+  localStorage.setItem("movieBuffFilters", JSON.stringify(filters));
+
+const persistedMovies = JSON.parse(localStorage.getItem("movieBuffMovies"));
+const persistMovies = (movies) =>
+  localStorage.setItem("movieBuffMovies", JSON.stringify(movies));
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-  const [queryTerm, setQueryTerm] = useState(DEFAULT_QUERY_TERM);
+  const [queryTerm, setQueryTerm] = useState("");
   const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
-  const [minimumRating, setMinimumRating] = useState(DEFAULT_MINIMUM_RATING);
-  const [genre, setGenre] = useState(DEFAULT_GENRE);
-  const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
-  const [sortBy, setSortBy] = useState(DEFAULT_SORT_BY);
-  const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
-  const [movies, setMovies] = useState(
-    JSON.parse(localStorage.getItem("movies")) || [],
+  const [minimumRating, setMinimumRating] = useState(
+    persistedFilters.minimumRating,
   );
+  const [genre, setGenre] = useState(persistedFilters.genre);
+  const [language, setLanguage] = useState(persistedFilters.language);
+  const [sortBy, setSortBy] = useState(persistedFilters.sortBy);
+  const [orderBy, setOrderBy] = useState(persistedFilters.orderBy);
+  const [movies, setMovies] = useState(persistedMovies);
   const [plexMovies, setPlexMovies] = useState([]);
 
   const loadMovieList = useCallback(async () => {
@@ -301,8 +313,8 @@ function App() {
     const searchParams = new URLSearchParams({
       query_term: searchedQueryTerm,
       minimum_rating: minimumRating,
-      genre: genre === DEFAULT_GENRE ? "" : genre,
-      language: language === DEFAULT_LANGUAGE ? "" : language,
+      genre: genre === defaultFilters.genre ? "" : genre,
+      language: language === defaultFilters.language ? "" : language,
       sort_by: sortBy,
       order_by: orderBy,
     });
@@ -323,16 +335,15 @@ function App() {
     setMovies(movies);
     setPlexMovies(plexMovies);
 
-    if (
-      searchedQueryTerm === DEFAULT_QUERY_TERM &&
-      minimumRating === DEFAULT_MINIMUM_RATING &&
-      genre === DEFAULT_GENRE &&
-      language === DEFAULT_LANGUAGE &&
-      sortBy === DEFAULT_SORT_BY &&
-      orderBy === DEFAULT_ORDER_BY
-    ) {
-      localStorage.setItem("movies", JSON.stringify(movies));
-    }
+    persistMovies(movies);
+    persistFilters({
+      minimumRating,
+      genre,
+      language,
+      sortBy,
+      orderBy,
+    });
+
     setIsLoading(false);
   }, [searchedQueryTerm, minimumRating, genre, language, sortBy, orderBy]);
 
