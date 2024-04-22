@@ -19,6 +19,9 @@ const FilterDialog = ({
   genres,
   selectedGenre,
   onGenreChange,
+  languages,
+  selectedLanguage,
+  onLanguageChange,
   ratings,
   minimumRating,
   onMinimumRatingChange,
@@ -90,6 +93,30 @@ const FilterDialog = ({
             </FormControl>
           </ListItem>
         )}
+        {languages && onLanguageChange && (
+          <ListItem>
+            <FormControl fullWidth>
+              <InputLabel id="language-select-label">Language</InputLabel>
+              <Select
+                value={selectedLanguage}
+                label="Language"
+                labelId="language-select-label"
+              >
+                {languages.map((option) => {
+                  return (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      onClick={() => onLanguageChange(option.value)}
+                    >
+                      {option.text}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </ListItem>
+        )}
       </List>
     </DialogContent>
     <DialogActions>
@@ -104,6 +131,9 @@ FilterDialog.propTypes = {
   genres: PropTypes.arrayOf(Object),
   selectedGenre: PropTypes.string,
   onGenreChange: PropTypes.func,
+  languages: PropTypes.arrayOf(Object),
+  selectedLanguage: PropTypes.string,
+  onLanguageChange: PropTypes.func,
   ratings: PropTypes.arrayOf(Object),
   minimumRating: PropTypes.number,
   onMinimumRatingChange: PropTypes.func,

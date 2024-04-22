@@ -76,6 +76,193 @@ const GENRE_OPTIONS = [
   { value: "Western", text: "Western" },
 ];
 
+const LANGUAGE_OPTIONS = [
+  { value: "DEFAULT", text: "All" },
+  { value: "ab", text: "Abkhazian" },
+  { value: "aa", text: "Afar" },
+  { value: "af", text: "Afrikaans" },
+  { value: "ak", text: "Akan" },
+  { value: "sq", text: "Albanian" },
+  { value: "am", text: "Amharic" },
+  { value: "ar", text: "Arabic" },
+  { value: "an", text: "Aragonese" },
+  { value: "hy", text: "Armenian" },
+  { value: "as", text: "Assamese" },
+  { value: "av", text: "Avar" },
+  { value: "ae", text: "Avestan" },
+  { value: "ay", text: "Aymara" },
+  { value: "az", text: "Azerbaijani" },
+  { value: "bm", text: "Bambara" },
+  { value: "ba", text: "Bashkir" },
+  { value: "eu", text: "Basque" },
+  { value: "be", text: "Belarusian" },
+  { value: "bn", text: "Bengali" },
+  { value: "bi", text: "Bislama" },
+  { value: "nb", text: "Bokmål" },
+  { value: "bs", text: "Bosnian" },
+  { value: "br", text: "Breton" },
+  { value: "bg", text: "Bulgarian" },
+  { value: "my", text: "Burmese" },
+  { value: "ca", text: "Catalan" },
+  { value: "km", text: "Central Khmer" },
+  { value: "ch", text: "Chamorro" },
+  { value: "ce", text: "Chechen" },
+  { value: "ny", text: "Chichewa" },
+  { value: "zh", text: "Chinese" },
+  { value: "cv", text: "Chuvash" },
+  { value: "kw", text: "Cornish" },
+  { value: "co", text: "Corsican" },
+  { value: "cr", text: "Cree" },
+  { value: "hr", text: "Croatian" },
+  { value: "cs", text: "Czech" },
+  { value: "da", text: "Danish" },
+  { value: "dv", text: "Dhivehi" },
+  { value: "dz", text: "Dzongkha" },
+  { value: "en", text: "English" },
+  { value: "eo", text: "Esperanto" },
+  { value: "et", text: "Estonian" },
+  { value: "ee", text: "Ewe" },
+  { value: "fo", text: "Faroese" },
+  { value: "fj", text: "Fijian" },
+  { value: "fi", text: "Finnish" },
+  { value: "nl", text: "Flemish dialects" },
+  { value: "fr", text: "French" },
+  { value: "ff", text: "Fulah" },
+  { value: "gl", text: "Galician" },
+  { value: "lg", text: "Ganda" },
+  { value: "ka", text: "Georgian" },
+  { value: "de", text: "German" },
+  { value: "ki", text: "Gikuyu" },
+  { value: "el", text: "Greek" },
+  { value: "kl", text: "Greenlandic" },
+  { value: "gn", text: "Guarani" },
+  { value: "gu", text: "Gujarati" },
+  { value: "ht", text: "Haitian Creole" },
+  { value: "ha", text: "Hausa" },
+  { value: "he", text: "Hebrew" },
+  { value: "hz", text: "Herero" },
+  { value: "hi", text: "Hindi" },
+  { value: "ho", text: "Hiri Motu" },
+  { value: "hu", text: "Hungarian" },
+  { value: "is", text: "Icelandic" },
+  { value: "io", text: "Ido (language)" },
+  { value: "ig", text: "Igbo" },
+  { value: "id", text: "Indonesian" },
+  { value: "ia", text: "Interlingua" },
+  { value: "ie", text: "Interlingue" },
+  { value: "iu", text: "Inuktitut" },
+  { value: "ik", text: "Inupiaq" },
+  { value: "ga", text: "Irish" },
+  { value: "it", text: "Italian" },
+  { value: "ja", text: "Japanese" },
+  { value: "jv", text: "Javanese" },
+  { value: "kn", text: "Kannada" },
+  { value: "kr", text: "Kanuri" },
+  { value: "ks", text: "Kashmiri" },
+  { value: "kk", text: "Kazakh" },
+  { value: "rw", text: "Kinyarwanda" },
+  { value: "ky", text: "Kirghiz" },
+  { value: "kv", text: "Komi" },
+  { value: "kg", text: "Kongo" },
+  { value: "ko", text: "Korean" },
+  { value: "kj", text: "Kuanyama" },
+  { value: "ku", text: "Kurdish" },
+  { value: "lo", text: "Lao" },
+  { value: "la", text: "Latin" },
+  { value: "lv", text: "Latvian" },
+  { value: "li", text: "Limburgan" },
+  { value: "ln", text: "Lingala" },
+  { value: "lt", text: "Lithuanian" },
+  { value: "lu", text: "Luba-Katanga" },
+  { value: "lb", text: "Luxembourgish" },
+  { value: "mk", text: "Macedonian" },
+  { value: "mg", text: "Malagasy" },
+  { value: "ms", text: "Malay" },
+  { value: "ml", text: "Malayalam" },
+  { value: "mt", text: "Maltese" },
+  { value: "gv", text: "Manx" },
+  { value: "mi", text: "Māori" },
+  { value: "mr", text: "Marathi" },
+  { value: "mh", text: "Marshallese" },
+  { value: "ro", text: "Moldovan" },
+  { value: "mn", text: "Mongolian" },
+  { value: "na", text: "Nauru" },
+  { value: "nv", text: "Navajo" },
+  { value: "ng", text: "Ndonga" },
+  { value: "ne", text: "Nepali" },
+  { value: "nd", text: "North Ndebele" },
+  { value: "se", text: "Northern Sami" },
+  { value: "no", text: "Norwegian" },
+  { value: "nn", text: "Nynorsk" },
+  { value: "oc", text: "Occitan" },
+  { value: "oj", text: "Ojibwa" },
+  { value: "cu", text: "Old Church Slavonic" },
+  { value: "or", text: "Oriya" },
+  { value: "om", text: "Oromo" },
+  { value: "os", text: "Ossetian" },
+  { value: "pi", text: "Pali" },
+  { value: "ps", text: "Pashto" },
+  { value: "fa", text: "Persian" },
+  { value: "pl", text: "Polish" },
+  { value: "pt", text: "Portuguese" },
+  { value: "pa", text: "Punjabi" },
+  { value: "qu", text: "Quechua" },
+  { value: "rm", text: "Romansh" },
+  { value: "rn", text: "Rundi" },
+  { value: "ru", text: "Russian" },
+  { value: "sm", text: "Samoan" },
+  { value: "sg", text: "Sango" },
+  { value: "sa", text: "Sanskrit" },
+  { value: "sc", text: "Sardinian" },
+  { value: "gd", text: "Scottish Gaelic" },
+  { value: "sr", text: "Serbian" },
+  { value: "sn", text: "Shona" },
+  { value: "ii", text: "Sichuan Yi" },
+  { value: "sd", text: "Sindhi" },
+  { value: "si", text: "Sinhala" },
+  { value: "sk", text: "Slovak" },
+  { value: "sl", text: "Slovene" },
+  { value: "so", text: "Somali" },
+  { value: "st", text: "Sotho" },
+  { value: "nr", text: "South Ndebele" },
+  { value: "es", text: "Spanish" },
+  { value: "bo", text: "Standard Tibetan" },
+  { value: "su", text: "Sundanese" },
+  { value: "sw", text: "Swahili" },
+  { value: "ss", text: "Swazi" },
+  { value: "sv", text: "Swedish" },
+  { value: "tl", text: "Tagalog" },
+  { value: "ty", text: "Tahitian" },
+  { value: "tg", text: "Tajik" },
+  { value: "ta", text: "Tamil" },
+  { value: "tt", text: "Tatar" },
+  { value: "te", text: "Telugu" },
+  { value: "th", text: "Thai" },
+  { value: "ti", text: "Tigrinya" },
+  { value: "to", text: "Tongan" },
+  { value: "ts", text: "Tsonga" },
+  { value: "tn", text: "Tswana" },
+  { value: "tr", text: "Turkish" },
+  { value: "tk", text: "Turkmen" },
+  { value: "tw", text: "Twi" },
+  { value: "ug", text: "Uighur" },
+  { value: "uk", text: "Ukrainian" },
+  { value: "ur", text: "Urdu" },
+  { value: "uz", text: "Uzbek" },
+  { value: "ve", text: "Venda" },
+  { value: "vi", text: "Vietnamese" },
+  { value: "vo", text: "Volapük" },
+  { value: "wa", text: "Walloon" },
+  { value: "cy", text: "Welsh" },
+  { value: "fy", text: "West Frisian" },
+  { value: "wo", text: "Wolof" },
+  { value: "xh", text: "Xhosa" },
+  { value: "yi", text: "Yiddish" },
+  { value: "yo", text: "Yoruba" },
+  { value: "za", text: "Zhuang" },
+  { value: "zu", text: "Zulu" },
+];
+
 const SORT_BY_OPTIONS = [
   { value: "title", text: "Title", defaultOrderBy: "asc" },
   { value: "year", text: "Year", defaultOrderBy: "desc" },
@@ -87,6 +274,7 @@ const SORT_BY_OPTIONS = [
 const DEFAULT_QUERY_TERM = "";
 const DEFAULT_MINIMUM_RATING = 0;
 const DEFAULT_GENRE = "DEFAULT";
+const DEFAULT_LANGUAGE = "DEFAULT";
 const DEFAULT_SORT_BY = "date_added";
 const DEFAULT_ORDER_BY = "desc";
 
@@ -99,6 +287,7 @@ function App() {
   const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
   const [minimumRating, setMinimumRating] = useState(DEFAULT_MINIMUM_RATING);
   const [genre, setGenre] = useState(DEFAULT_GENRE);
+  const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
   const [sortBy, setSortBy] = useState(DEFAULT_SORT_BY);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
   const [movies, setMovies] = useState(
@@ -112,7 +301,8 @@ function App() {
     const searchParams = new URLSearchParams({
       query_term: searchedQueryTerm,
       minimum_rating: minimumRating,
-      genre: genre === "DEFAULT" ? "" : genre,
+      genre: genre === DEFAULT_GENRE ? "" : genre,
+      language: language === DEFAULT_LANGUAGE ? "" : language,
       sort_by: sortBy,
       order_by: orderBy,
     });
@@ -137,13 +327,18 @@ function App() {
       searchedQueryTerm === DEFAULT_QUERY_TERM &&
       minimumRating === DEFAULT_MINIMUM_RATING &&
       genre === DEFAULT_GENRE &&
+      language === DEFAULT_LANGUAGE &&
       sortBy === DEFAULT_SORT_BY &&
       orderBy === DEFAULT_ORDER_BY
     ) {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
     setIsLoading(false);
-  }, [searchedQueryTerm, minimumRating, genre, sortBy, orderBy]);
+  }, [searchedQueryTerm, minimumRating, genre, language, sortBy, orderBy]);
+
+  useEffect(() => {
+    loadMovieList();
+  }, [loadMovieList]);
 
   useEffect(() => {
     if (alertMessage) {
@@ -170,10 +365,6 @@ function App() {
 
     setSortBy(sortByOption.value);
   };
-
-  useEffect(() => {
-    loadMovieList();
-  }, [loadMovieList]);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -218,6 +409,9 @@ function App() {
             genres={GENRE_OPTIONS}
             selectedGenre={genre}
             onGenreChange={setGenre}
+            languages={LANGUAGE_OPTIONS}
+            selectedLanguage={language}
+            onLanguageChange={setLanguage}
             ratings={MINIMUM_RATING_OPTIONS}
             minimumRating={minimumRating}
             onMinimumRatingChange={setMinimumRating}
