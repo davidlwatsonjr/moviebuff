@@ -14,6 +14,8 @@ function DownloadLinks({ links }) {
           key={link.url}
           label={`${link.quality}.${link.type.toUpperCase()}`}
           size="small"
+          title={`${link.seeds} / ${link.peers}`}
+          sx={{ textDecoration: link.seeds === 0 ? "line-through" : "none" }}
           onClick={() => handleLinkClick(link)}
         />
       ))}
