@@ -3,7 +3,8 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 
 function DownloadLinks({ links }) {
-  const handleLinkClick = (link) => {
+  const handleLinkClick = (event, link) => {
+    event.stopPropagation();
     navigator.clipboard.writeText(link.url);
   };
 
@@ -16,7 +17,7 @@ function DownloadLinks({ links }) {
           size="small"
           title={`${link.seeds} / ${link.peers}`}
           sx={{ textDecoration: link.seeds === 0 ? "line-through" : "none" }}
-          onClick={() => handleLinkClick(link)}
+          onClick={(e) => handleLinkClick(e, link)}
         />
       ))}
     </Stack>

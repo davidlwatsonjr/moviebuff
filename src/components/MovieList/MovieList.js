@@ -34,6 +34,7 @@ function MovieList({ movies, showDownloaded }) {
                     target="_blank"
                     rel="noreferrer"
                     title={movie.title}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <Avatar
                       alt={movie.title}
@@ -51,7 +52,8 @@ function MovieList({ movies, showDownloaded }) {
                         target="_blank"
                         rel="noreferrer"
                         title={movie.date_uploaded}
-                      >
+                        onClick={(e) => e.stopPropagation()}
+                        >
                         {movie.title}
                       </Link>{" "}
                       ({movie.year}-{movie.language}) ⭐ {movie.rating}
