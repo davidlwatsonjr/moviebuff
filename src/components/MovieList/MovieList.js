@@ -15,75 +15,68 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 
-function MovieList({ movies, showDownloaded }) {
+function MovieList({ movies }) {
   return (
     <List sx={{ marginTop: 1 }}>
-      {movies?.map?.((movie) => {
-        if (!showDownloaded && movie.plexEquivalent) {
-          return null;
-        }
-
-        return (
-          <ListItem key={movie.url} disableGutters disablePadding>
-            <Accordion disableGutters square sx={{ width: "100%" }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <ListItemAvatar>
-                  <Link
-                    href={movie.url}
-                    underline="hover"
-                    target="_blank"
-                    rel="noreferrer"
-                    title={movie.title}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Avatar
-                      alt={movie.title}
-                      src={movie.medium_cover_image}
-                      sx={{ marginRight: 2, width: 64, height: 64 }}
-                    />
-                  </Link>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <>
-                      <Link
-                        href={movie.url}
-                        underline="hover"
-                        target="_blank"
-                        rel="noreferrer"
-                        title={movie.date_uploaded}
-                        onClick={(e) => e.stopPropagation()}
-                        >
-                        {movie.title}
-                      </Link>{" "}
-                      ({movie.year}-{movie.language}) ⭐ {movie.rating}
-                    </>
-                  }
-                  secondary={<DownloadLinks links={movie.torrents} />}
-                ></ListItemText>
-                {movie.plexEquivalent && <CheckIcon color="success" />}
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box>{movie.summary}</Box>
-                <Box component="p">
-                  <Stack direction="row" spacing={1}>
-                    {movie.genres.map((genre) => (
-                      <Chip key={genre} label={genre} size="small" />
-                    ))}
-                  </Stack>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          </ListItem>
-        );
-      })}
+      {movies?.map?.((movie) => (
+        <ListItem key={movie.url} disableGutters disablePadding>
+          <Accordion disableGutters square sx={{ width: "100%" }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <ListItemAvatar>
+                <Link
+                  href={movie.url}
+                  underline="hover"
+                  target="_blank"
+                  rel="noreferrer"
+                  title={movie.title}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Avatar
+                    alt={movie.title}
+                    src={movie.medium_cover_image}
+                    sx={{ marginRight: 2, width: 64, height: 64 }}
+                  />
+                </Link>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <>
+                    <Link
+                      href={movie.url}
+                      underline="hover"
+                      target="_blank"
+                      rel="noreferrer"
+                      title={movie.date_uploaded}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {movie.title}
+                    </Link>{" "}
+                    ({movie.year}-{movie.language}) ⭐ {movie.rating}
+                  </>
+                }
+                secondary={<DownloadLinks links={movie.torrents} />}
+              ></ListItemText>
+              {movie.plexEquivalent && <CheckIcon color="success" />}
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box>{movie.summary}</Box>
+              <Box component="p">
+                <Stack direction="row" spacing={1}>
+                  {movie.genres.map((genre) => (
+                    <Chip key={genre} label={genre} size="small" />
+                  ))}
+                </Stack>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </ListItem>
+      ))}
     </List>
   );
 }
 
 MovieList.propTypes = {
   movies: PropTypes.arrayOf(Object),
-  showDownloaded: PropTypes.bool,
 };
 
 export default MovieList;
