@@ -62,7 +62,7 @@ function MovieList({ movies }) {
               <Box>{movie.summary}</Box>
               <Box component="p">
                 <Stack direction="row" spacing={1}>
-                  {movie.genres.map((genre) => (
+                  {movie.genres?.map((genre) => (
                     <Chip key={genre} label={genre} size="small" />
                   ))}
                 </Stack>
