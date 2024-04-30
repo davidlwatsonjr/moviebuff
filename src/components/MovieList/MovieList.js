@@ -20,7 +20,14 @@ function MovieList({ movies }) {
     <List sx={{ marginTop: 1 }}>
       {movies?.map?.((movie) => (
         <ListItem key={movie.url} disableGutters disablePadding>
-          <Accordion disableGutters square sx={{ width: "100%" }}>
+          <Accordion
+            disableGutters
+            square
+            sx={{
+              opacity: movie.plexEquivalent ? 0.333 : 1,
+              width: "100%",
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <ListItemAvatar>
                 <Link
@@ -56,10 +63,8 @@ function MovieList({ movies }) {
                 }
                 secondary={<DownloadLinks links={movie.torrents} />}
               ></ListItemText>
-              {movie.plexEquivalent && <CheckIcon color="success" />}
             </AccordionSummary>
             <AccordionDetails>
-              <Box>{movie.summary}</Box>
               <Box component="p">
                 <Stack direction="row" spacing={1}>
                   {movie.genres?.map((genre) => (
@@ -67,6 +72,8 @@ function MovieList({ movies }) {
                   ))}
                 </Stack>
               </Box>
+              <Box>{movie.summary}</Box>
+              <Box>Runtime: {movie.runtime} minutes</Box>
             </AccordionDetails>
           </Accordion>
         </ListItem>
