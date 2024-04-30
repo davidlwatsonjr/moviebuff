@@ -66,7 +66,7 @@ function MovieList({ movies }) {
             </AccordionSummary>
             <AccordionDetails>
               <Box component="p">
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
                   {movie.genres?.map((genre) => (
                     <Chip key={genre} label={genre} size="small" />
                   ))}
