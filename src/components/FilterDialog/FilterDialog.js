@@ -1,4 +1,6 @@
 import PropTypes from "prop-types";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useTheme from "@mui/material/styles/useTheme";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -26,7 +28,13 @@ const FilterDialog = ({
   minimumRating,
   onMinimumRatingChange,
 }) => (
-  <Dialog fullScreen open={open} onClose={onClose}>
+  <Dialog
+    fullScreen={useMediaQuery(useTheme().breakpoints.down("sm"))}
+    fullWidth
+    maxWidth="sm"
+    open={open}
+    onClose={onClose}
+  >
     <DialogTitle>Filters</DialogTitle>
     <IconButton
       aria-label="close"
