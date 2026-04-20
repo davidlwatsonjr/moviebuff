@@ -291,20 +291,62 @@ const persistedMovies = JSON.parse(localStorage.getItem("movieBuffMovies"));
 const persistMovies = (movies) =>
   localStorage.setItem("movieBuffMovies", JSON.stringify(movies));
 
+// --- URL ↔ state helpers ---
+
+// Map: URL param key → state field name
+// q, min_rating, genre, lang, sort, order
+const readUrlState = (search = window.location.search) => {
+  const params = new URLSearchParams(search);
+  return {
+    q: params.get("q") ?? "",
+    minimumRating: params.has("min_rating")
+      ? Number(params.get("min_rating"))
+      : null,
+    genre: params.get("genre"),
+    language: params.get("lang"),
+    sortBy: params.get("sort"),
+    orderBy: params.get("order"),
+  };
+};
+
+const buildUrlSearch = ({ q, minimumRating, genre, language, sortBy, orderBy }) => {
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  if (minimumRating !== defaultFilters.minimumRating)
+    params.set("min_rating", minimumRating);
+  if (genre !== defaultFilters.genre) params.set("genre", genre);
+  if (language !== defaultFilters.language) params.set("lang", language);
+  if (sortBy !== defaultFilters.sortBy) params.set("sort", sortBy);
+  if (orderBy !== defaultFilters.orderBy) params.set("order", orderBy);
+  const str = params.toString();
+  return str ? `?${str}` : "";
+};
+
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-  const [queryTerm, setQueryTerm] = useState("");
-  const [searchedQueryTerm, setSearchedQueryTerm] = useState("");
-  const [minimumRating, setMinimumRating] = useState(
-    persistedFilters.minimumRating,
+  // Priority for initial values: URL params > persisted filters > defaultFilters
+  const [queryTerm, setQueryTerm] = useState(() => readUrlState().q);
+  const [searchedQueryTerm, setSearchedQueryTerm] = useState(
+    () => readUrlState().q,
   );
-  const [genre, setGenre] = useState(persistedFilters.genre);
-  const [language, setLanguage] = useState(persistedFilters.language);
-  const [sortBy, setSortBy] = useState(persistedFilters.sortBy);
-  const [orderBy, setOrderBy] = useState(persistedFilters.orderBy);
+  const [minimumRating, setMinimumRating] = useState(
+    () => readUrlState().minimumRating ?? persistedFilters.minimumRating,
+  );
+  const [genre, setGenre] = useState(
+    () => readUrlState().genre ?? persistedFilters.genre,
+  );
+  const [language, setLanguage] = useState(
+    () => readUrlState().language ?? persistedFilters.language,
+  );
+  const [sortBy, setSortBy] = useState(
+    () => readUrlState().sortBy ?? persistedFilters.sortBy,
+  );
+  const [orderBy, setOrderBy] = useState(
+    () => readUrlState().orderBy ?? persistedFilters.orderBy,
+  );
   const [movies, setMovies] = useState(persistedMovies);
   const [plexMovies, setPlexMovies] = useState([]);
   const [page, setPage] = useState(1);
@@ -396,22 +438,107 @@ function App() {
     }
   }, [alertMessage]);
 
+  // Sync all state back from the URL when the user navigates with Back/Forward.
+  useEffect(() => {
+    const handlePopState = () => {
+      const {
+        q,
+        minimumRating: minR,
+        genre: g,
+        language: lang,
+        sortBy: sort,
+        orderBy: ord,
+      } = readUrlState();
+      setQueryTerm(q);
+      setSearchedQueryTerm(q);
+      setMinimumRating(minR ?? defaultFilters.minimumRating);
+      setGenre(g ?? defaultFilters.genre);
+      setLanguage(lang ?? defaultFilters.language);
+      setSortBy(sort ?? defaultFilters.sortBy);
+      setOrderBy(ord ?? defaultFilters.orderBy);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   const handleQueryTermChange = (event) => {
     setQueryTerm(event.target.value);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     setSearchedQueryTerm(queryTerm);
+    // Search submissions create a new history entry so Back returns to the
+    // previous search.
+    const search = buildUrlSearch({
+      q: queryTerm,
+      minimumRating,
+      genre,
+      language,
+      sortBy,
+      orderBy,
+    });
+    window.history.pushState(null, "", search || window.location.pathname);
   };
 
   const handleSortByChange = (sortByOption) => {
-    if (sortByOption.value === sortBy) {
-      setOrderBy(orderBy === "asc" ? "desc" : "asc");
-    } else {
-      setOrderBy(sortByOption.defaultOrderBy);
-    }
+    const newOrderBy =
+      sortByOption.value === sortBy
+        ? orderBy === "asc"
+          ? "desc"
+          : "asc"
+        : sortByOption.defaultOrderBy;
+    const newSortBy = sortByOption.value;
+    setOrderBy(newOrderBy);
+    setSortBy(newSortBy);
+    // Filter/sort tweaks replace the current entry; no new Back-button stop.
+    const search = buildUrlSearch({
+      q: searchedQueryTerm,
+      minimumRating,
+      genre,
+      language,
+      sortBy: newSortBy,
+      orderBy: newOrderBy,
+    });
+    window.history.replaceState(null, "", search || window.location.pathname);
+  };
 
-    setSortBy(sortByOption.value);
+  const handleGenreChange = (newGenre) => {
+    setGenre(newGenre);
+    const search = buildUrlSearch({
+      q: searchedQueryTerm,
+      minimumRating,
+      genre: newGenre,
+      language,
+      sortBy,
+      orderBy,
+    });
+    window.history.replaceState(null, "", search || window.location.pathname);
+  };
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    const search = buildUrlSearch({
+      q: searchedQueryTerm,
+      minimumRating,
+      genre,
+      language: newLanguage,
+      sortBy,
+      orderBy,
+    });
+    window.history.replaceState(null, "", search || window.location.pathname);
+  };
+
+  const handleMinimumRatingChange = (newMinimumRating) => {
+    setMinimumRating(newMinimumRating);
+    const search = buildUrlSearch({
+      q: searchedQueryTerm,
+      minimumRating: newMinimumRating,
+      genre,
+      language,
+      sortBy,
+      orderBy,
+    });
+    window.history.replaceState(null, "", search || window.location.pathname);
   };
 
   return (
@@ -431,6 +558,7 @@ function App() {
             size="small"
             fullWidth
             placeholder="Search movies..."
+            value={queryTerm}
             onChange={handleQueryTermChange}
             onKeyUp={(event) => {
               if (event.key === "Enter") {
@@ -456,13 +584,13 @@ function App() {
             onClose={() => setIsFilterDialogOpen(false)}
             genres={GENRE_OPTIONS}
             selectedGenre={genre}
-            onGenreChange={setGenre}
+            onGenreChange={handleGenreChange}
             languages={LANGUAGE_OPTIONS}
             selectedLanguage={language}
-            onLanguageChange={setLanguage}
+            onLanguageChange={handleLanguageChange}
             ratings={MINIMUM_RATING_OPTIONS}
             minimumRating={minimumRating}
-            onMinimumRatingChange={setMinimumRating}
+            onMinimumRatingChange={handleMinimumRatingChange}
           />
           <Select value={sortBy}>
             {SORT_BY_OPTIONS.map((option) => {
