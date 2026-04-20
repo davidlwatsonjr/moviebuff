@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -40,6 +40,7 @@ const darkTheme = createTheme({
 });
 
 const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
+// const MOVIES_API_URL = "http://localhost:8080/movies";
 
 const MINIMUM_RATING_OPTIONS = new Array(10)
   .fill()
@@ -306,50 +307,86 @@ function App() {
   const [orderBy, setOrderBy] = useState(persistedFilters.orderBy);
   const [movies, setMovies] = useState(persistedMovies);
   const [plexMovies, setPlexMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const isLoadingRef = useRef(false);
 
-  const loadMovieList = useCallback(async () => {
-    setIsLoading(true);
+  const loadMovieList = useCallback(
+    async (pageNum) => {
+      if (isLoadingRef.current) return;
+      isLoadingRef.current = true;
+      setIsLoading(true);
 
-    const searchParams = new URLSearchParams({
-      query_term: searchedQueryTerm,
-      minimum_rating: minimumRating,
-      genre: genre === defaultFilters.genre ? "" : genre,
-      language: language === defaultFilters.language ? "" : language,
-      sort_by: sortBy,
-      order_by: orderBy,
-    });
-    const url = `${MOVIES_API_URL}?${searchParams}`;
+      const searchParams = new URLSearchParams({
+        query_term: searchedQueryTerm,
+        minimum_rating: minimumRating,
+        genre: genre === defaultFilters.genre ? "" : genre,
+        language: language === defaultFilters.language ? "" : language,
+        sort_by: sortBy,
+        order_by: orderBy,
+        page: pageNum,
+      });
+      const url = `${MOVIES_API_URL}?${searchParams}`;
 
-    let moviesResponse;
-    try {
-      moviesResponse = await fetch(url);
-    } catch (error) {
-      console.error(error);
-      setAlertMessage("An error occurred while loading the movie list.");
-      setAlertSeverity("error");
+      let moviesResponse;
+      try {
+        moviesResponse = await fetch(url);
+      } catch (error) {
+        console.error(error);
+        setAlertMessage("An error occurred while loading the movie list.");
+        setAlertSeverity("error");
+        isLoadingRef.current = false;
+        setIsLoading(false);
+        return;
+      }
+
+      const { movies: newMovies, plexMovies: newPlexMovies } =
+        await moviesResponse.json();
+
+      if (pageNum === 1) {
+        setMovies(newMovies);
+        setPlexMovies(newPlexMovies);
+        persistMovies(newMovies);
+      } else {
+        setMovies((prev) => [...prev, ...newMovies]);
+      }
+
+      setHasMore(newMovies.length > 0);
+
+      persistFilters({
+        minimumRating,
+        genre,
+        language,
+        sortBy,
+        orderBy,
+      });
+
+      isLoadingRef.current = false;
       setIsLoading(false);
-      return;
-    }
+    },
+    [searchedQueryTerm, minimumRating, genre, language, sortBy, orderBy],
+  );
 
-    const { movies, plexMovies } = await moviesResponse.json();
-    setMovies(movies);
-    setPlexMovies(plexMovies);
-
-    persistMovies(movies);
-    persistFilters({
-      minimumRating,
-      genre,
-      language,
-      sortBy,
-      orderBy,
-    });
-
-    setIsLoading(false);
-  }, [searchedQueryTerm, minimumRating, genre, language, sortBy, orderBy]);
-
+  // Fresh load whenever filters/search change.
   useEffect(() => {
-    loadMovieList();
+    setPage(1);
+    setHasMore(true);
+    loadMovieList(1);
   }, [loadMovieList]);
+
+  // Append the next page when `page` increments past 1.
+  useEffect(() => {
+    if (page > 1) {
+      loadMovieList(page);
+    }
+    // Intentionally omitting loadMovieList: this effect is only for
+    // pagination triggers. Filter changes are handled by the effect above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  const loadNextPage = useCallback(() => {
+    setPage((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     if (alertMessage) {
@@ -447,7 +484,12 @@ function App() {
             })}
           </Select>
         </Stack>
-        <MovieList movies={movies} />
+        <MovieList
+          movies={movies}
+          isLoading={isLoading}
+          hasMore={hasMore}
+          onLoadMore={loadNextPage}
+        />
         {plexMovies.length > 0 && (
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>

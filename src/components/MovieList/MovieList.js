@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
@@ -6,6 +7,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
+import LinearProgress from "@mui/material/LinearProgress";
 import DownloadLinks from "../DownloadLinks/DownloadLinks";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
@@ -14,7 +16,42 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 
-function MovieList({ movies }) {
+function MovieList({ movies, onLoadMore, isLoading, hasMore }) {
+  const sentinelRef = useRef(null);
+  // Use refs so the observer callback always reads the latest values
+  // without needing to be re-registered on every render.
+  const isLoadingRef = useRef(isLoading);
+  const hasMoreRef = useRef(hasMore);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  useEffect(() => {
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !onLoadMore) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          hasMoreRef.current &&
+          !isLoadingRef.current
+        ) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [onLoadMore]);
+
   return (
     <List sx={{ marginTop: 1 }}>
       {movies?.map?.((movie) => (
@@ -77,12 +114,19 @@ function MovieList({ movies }) {
           </Accordion>
         </ListItem>
       ))}
+      {/* Sentinel element observed to trigger the next page load */}
+      <Box ref={sentinelRef} aria-hidden="true">
+        {isLoading && <LinearProgress />}
+      </Box>
     </List>
   );
 }
 
 MovieList.propTypes = {
   movies: PropTypes.arrayOf(Object),
+  onLoadMore: PropTypes.func,
+  isLoading: PropTypes.bool,
+  hasMore: PropTypes.bool,
 };
 
 export default MovieList;
