@@ -45,7 +45,7 @@ function MovieList({ movies, onLoadMore, isLoading, hasMore }) {
           onLoadMore();
         }
       },
-      { threshold: 0.1 },
+      { rootMargin: "1000px", threshold: 0.1 },
     );
 
     observer.observe(sentinel);
