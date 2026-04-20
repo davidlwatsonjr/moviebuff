@@ -280,13 +280,6 @@ const defaultFilters = {
   orderBy: "desc",
 };
 
-const persistedFilters = {
-  ...defaultFilters,
-  ...JSON.parse(localStorage.getItem("movieBuffFilters")),
-};
-const persistFilters = (filters) =>
-  localStorage.setItem("movieBuffFilters", JSON.stringify(filters));
-
 const persistedMovies = JSON.parse(localStorage.getItem("movieBuffMovies"));
 const persistMovies = (movies) =>
   localStorage.setItem("movieBuffMovies", JSON.stringify(movies));
@@ -327,25 +320,25 @@ function App() {
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-  // Priority for initial values: URL params > persisted filters > defaultFilters
+  // Priority for initial values: URL params > defaultFilters
   const [queryTerm, setQueryTerm] = useState(() => readUrlState().q);
   const [searchedQueryTerm, setSearchedQueryTerm] = useState(
     () => readUrlState().q,
   );
   const [minimumRating, setMinimumRating] = useState(
-    () => readUrlState().minimumRating ?? persistedFilters.minimumRating,
+    () => readUrlState().minimumRating ?? defaultFilters.minimumRating,
   );
   const [genre, setGenre] = useState(
-    () => readUrlState().genre ?? persistedFilters.genre,
+    () => readUrlState().genre ?? defaultFilters.genre,
   );
   const [language, setLanguage] = useState(
-    () => readUrlState().language ?? persistedFilters.language,
+    () => readUrlState().language ?? defaultFilters.language,
   );
   const [sortBy, setSortBy] = useState(
-    () => readUrlState().sortBy ?? persistedFilters.sortBy,
+    () => readUrlState().sortBy ?? defaultFilters.sortBy,
   );
   const [orderBy, setOrderBy] = useState(
-    () => readUrlState().orderBy ?? persistedFilters.orderBy,
+    () => readUrlState().orderBy ?? defaultFilters.orderBy,
   );
   const [movies, setMovies] = useState(persistedMovies);
   const [plexMovies, setPlexMovies] = useState([]);
@@ -394,14 +387,6 @@ function App() {
       }
 
       setHasMore(newMovies.length > 0);
-
-      persistFilters({
-        minimumRating,
-        genre,
-        language,
-        sortBy,
-        orderBy,
-      });
 
       isLoadingRef.current = false;
       setIsLoading(false);
