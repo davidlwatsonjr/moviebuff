@@ -39,9 +39,10 @@ const darkTheme = createTheme({
   },
 });
 
-const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
+// const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
+const MOVIES_API_URL = "http://localhost:8080/movies";
 
-const MINIMUM_RATING_OPTIONS = Array(10)
+const MINIMUM_RATING_OPTIONS = new Array(10)
   .fill()
   .map((_, i) => ({ value: i, text: `⭐ ${i}.0+` }));
 
@@ -281,7 +282,7 @@ const defaultFilters = {
 
 const persistedFilters = {
   ...defaultFilters,
-  ...(JSON.parse(localStorage.getItem("movieBuffFilters")) || {}),
+  ...JSON.parse(localStorage.getItem("movieBuffFilters")),
 };
 const persistFilters = (filters) =>
   localStorage.setItem("movieBuffFilters", JSON.stringify(filters));
