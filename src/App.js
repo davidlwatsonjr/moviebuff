@@ -568,71 +568,73 @@ function App() {
           <LinearProgress />
         </Box>
       )}
-      <Container maxWidth="md" sx={{ textAlign: "center" }}>
-        <Typography component="h1" variant="h4" padding={2}>
-          Movie List
-        </Typography>
-        <Stack spacing={2} direction="row">
-          <TextField
-            size="small"
-            fullWidth
-            autoFocus
-            placeholder="Search movies..."
-            value={queryTerm}
-            onChange={handleQueryTermChange}
-            onFocus={(event) => event.target.select()}
-            onKeyUp={(event) => {
-              if (event.key === "Enter") {
-                handleSearch();
-                event.target.select();
-              }
-            }}
-          />
-          <Button variant="contained" color="primary" onClick={handleSearch}>
-            Search
-          </Button>
-        </Stack>
-        <Stack spacing={2} direction="row" justifyContent="end" marginTop={2}>
-          <Button
-            variant="outlined"
-            startIcon={<FilterListIcon />}
-            onClick={() => setIsFilterDialogOpen(true)}
-          >
-            Filters
-          </Button>
-          <FilterDialog
-            open={isFilterDialogOpen}
-            onClose={() => setIsFilterDialogOpen(false)}
-            genres={GENRE_OPTIONS}
-            selectedGenre={genre}
-            onGenreChange={handleGenreChange}
-            languages={LANGUAGE_OPTIONS}
-            selectedLanguage={language}
-            onLanguageChange={handleLanguageChange}
-            ratings={MINIMUM_RATING_OPTIONS}
-            minimumRating={minimumRating}
-            onMinimumRatingChange={handleMinimumRatingChange}
-          />
-          <Select value={sortBy} inputProps={{ "aria-label": "Sort by" }}>
-            {SORT_BY_OPTIONS.map((option) => {
-              const DirectionIcon =
-                orderBy === "asc" ? ArrowUpwardIcon : ArrowDownwardIcon;
+      <Container component="main" maxWidth="md" sx={{ textAlign: "center" }}>
+        <Box component="header">
+          <Typography component="h1" variant="h4" padding={2}>
+            Movie List
+          </Typography>
+          <Stack spacing={2} direction="row">
+            <TextField
+              size="small"
+              fullWidth
+              autoFocus
+              placeholder="Search movies..."
+              value={queryTerm}
+              onChange={handleQueryTermChange}
+              onFocus={(event) => event.target.select()}
+              onKeyUp={(event) => {
+                if (event.key === "Enter") {
+                  handleSearch();
+                  event.target.select();
+                }
+              }}
+            />
+            <Button variant="contained" color="primary" onClick={handleSearch}>
+              Search
+            </Button>
+          </Stack>
+          <Stack spacing={2} direction="row" justifyContent="end" marginTop={2}>
+            <Button
+              variant="outlined"
+              startIcon={<FilterListIcon />}
+              onClick={() => setIsFilterDialogOpen(true)}
+            >
+              Filters
+            </Button>
+            <FilterDialog
+              open={isFilterDialogOpen}
+              onClose={() => setIsFilterDialogOpen(false)}
+              genres={GENRE_OPTIONS}
+              selectedGenre={genre}
+              onGenreChange={handleGenreChange}
+              languages={LANGUAGE_OPTIONS}
+              selectedLanguage={language}
+              onLanguageChange={handleLanguageChange}
+              ratings={MINIMUM_RATING_OPTIONS}
+              minimumRating={minimumRating}
+              onMinimumRatingChange={handleMinimumRatingChange}
+            />
+            <Select value={sortBy} inputProps={{ "aria-label": "Sort by" }}>
+              {SORT_BY_OPTIONS.map((option) => {
+                const DirectionIcon =
+                  orderBy === "asc" ? ArrowUpwardIcon : ArrowDownwardIcon;
 
-              return (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  onClick={() => handleSortByChange(option)}
-                >
-                  {option.text}{" "}
-                  {option.value === sortBy ? (
-                    <DirectionIcon fontSize="inherit" />
-                  ) : null}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </Stack>
+                return (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    onClick={() => handleSortByChange(option)}
+                  >
+                    {option.text}{" "}
+                    {option.value === sortBy ? (
+                      <DirectionIcon fontSize="inherit" />
+                    ) : null}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </Stack>
+        </Box>
         <MovieList
           movies={movies}
           isLoading={isLoading}
