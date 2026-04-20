@@ -315,6 +315,19 @@ const buildUrlSearch = ({ q, minimumRating, genre, language, sortBy, orderBy }) 
   return str ? `?${str}` : "";
 };
 
+// --- Last-session restoration ---
+// Runs at module load time, before React renders anything.
+// If the user lands on the base URL (no params), check localStorage for a
+// previously saved search string and redirect to it.  replace() is used so
+// the bare URL is not pushed onto the history stack — pressing Back skips
+// straight past it to wherever the user came from.
+if (!window.location.search) {
+  const lastSearch = localStorage.getItem("movieBuffLastSearch");
+  if (lastSearch) {
+    window.location.replace(window.location.pathname + lastSearch);
+  }
+}
+
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("");
@@ -414,6 +427,27 @@ function App() {
   const loadNextPage = useCallback(() => {
     setPage((prev) => prev + 1);
   }, []);
+
+  // Keep localStorage in sync with the active search/filter state.
+  // The module-level redirect reads this key when the user next visits the
+  // base URL, restoring their last session transparently.
+  // When all values match defaultFilters, buildUrlSearch returns "" and the
+  // key is removed — preventing a redirect for a fully-reset state.
+  useEffect(() => {
+    const search = buildUrlSearch({
+      q: searchedQueryTerm,
+      minimumRating,
+      genre,
+      language,
+      sortBy,
+      orderBy,
+    });
+    if (search) {
+      localStorage.setItem("movieBuffLastSearch", search);
+    } else {
+      localStorage.removeItem("movieBuffLastSearch");
+    }
+  }, [searchedQueryTerm, minimumRating, genre, language, sortBy, orderBy]);
 
   useEffect(() => {
     if (alertMessage) {
