@@ -580,6 +580,7 @@ function App() {
             placeholder="Search movies..."
             value={queryTerm}
             onChange={handleQueryTermChange}
+            onFocus={(event) => event.target.select()}
             onKeyUp={(event) => {
               if (event.key === "Enter") {
                 handleSearch();
