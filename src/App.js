@@ -576,6 +576,7 @@ function App() {
           <TextField
             size="small"
             fullWidth
+            autoFocus
             placeholder="Search movies..."
             value={queryTerm}
             onChange={handleQueryTermChange}
