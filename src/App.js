@@ -39,8 +39,7 @@ const darkTheme = createTheme({
   },
 });
 
-// const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
-const MOVIES_API_URL = "http://localhost:8080/movies";
+const MOVIES_API_URL = "https://movies.davidlwatsonjr.com/movies";
 
 const MINIMUM_RATING_OPTIONS = new Array(10)
   .fill()
