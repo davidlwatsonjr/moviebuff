@@ -613,7 +613,7 @@ function App() {
             minimumRating={minimumRating}
             onMinimumRatingChange={handleMinimumRatingChange}
           />
-          <Select value={sortBy}>
+          <Select value={sortBy} inputProps={{ "aria-label": "Sort by" }}>
             {SORT_BY_OPTIONS.map((option) => {
               const DirectionIcon =
                 orderBy === "asc" ? ArrowUpwardIcon : ArrowDownwardIcon;
