@@ -563,7 +563,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline enableColorScheme />
-      {isLoading && (
+      {isLoading && page === 1 && (
         <Box position="fixed" top={0} left={0} right={0}>
           <LinearProgress />
         </Box>
@@ -640,6 +640,7 @@ function App() {
           isLoading={isLoading}
           hasMore={hasMore}
           onLoadMore={loadNextPage}
+          page={page}
         />
         {plexMovies.length > 0 && (
           <Accordion defaultExpanded>

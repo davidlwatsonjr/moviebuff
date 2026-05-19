@@ -16,7 +16,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 
-function MovieList({ movies, onLoadMore, isLoading, hasMore }) {
+function MovieList({ movies, onLoadMore, isLoading, hasMore, page }) {
   const sentinelRef = useRef(null);
   // Use refs so the observer callback always reads the latest values
   // without needing to be re-registered on every render.
@@ -116,7 +116,7 @@ function MovieList({ movies, onLoadMore, isLoading, hasMore }) {
       ))}
       {/* Sentinel element observed to trigger the next page load */}
       <Box ref={sentinelRef} aria-hidden="true">
-        {isLoading && <LinearProgress />}
+        {isLoading && page > 1 && <LinearProgress />}
       </Box>
     </List>
   );
@@ -127,6 +127,7 @@ MovieList.propTypes = {
   onLoadMore: PropTypes.func,
   isLoading: PropTypes.bool,
   hasMore: PropTypes.bool,
+  page: PropTypes.number,
 };
 
 export default MovieList;
