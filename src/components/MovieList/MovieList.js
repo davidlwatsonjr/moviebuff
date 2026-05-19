@@ -64,7 +64,12 @@ function MovieList({ movies, onLoadMore, isLoading, hasMore, page }) {
               width: "100%",
             }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={{
+                "& .MuiAccordionSummary-content": { alignItems: "flex-start" },
+              }}
+            >
               <ListItemAvatar>
                 <Link
                   href={movie.url}
@@ -82,23 +87,33 @@ function MovieList({ movies, onLoadMore, isLoading, hasMore, page }) {
                 </Link>
               </ListItemAvatar>
               <ListItemText
+                sx={{ mt: 0 }}
                 primary={
+                  <Link
+                    href={movie.url}
+                    underline="hover"
+                    target="_blank"
+                    rel="noreferrer"
+                    title={movie.date_uploaded}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {movie.title}
+                  </Link>
+                }
+                secondaryTypographyProps={{ component: "div" }}
+                secondary={
                   <>
-                    <Link
-                      href={movie.url}
-                      underline="hover"
-                      target="_blank"
-                      rel="noreferrer"
-                      title={movie.date_uploaded}
-                      onClick={(e) => e.stopPropagation()}
+                    <Box
+                      component="span"
+                      sx={{ color: "text.primary", display: "block" }}
                     >
-                      {movie.title}
-                    </Link>{" "}
-                    ({movie.year}-{movie.language}) ⭐ {movie.rating}
+                      {movie.year} &middot; {movie.language.toUpperCase()}{" "}
+                      &middot; ⭐ {movie.rating > 0 ? movie.rating : "N/A"}
+                    </Box>
+                    <DownloadLinks links={movie.torrents} />
                   </>
                 }
-                secondary={<DownloadLinks links={movie.torrents} />}
-              ></ListItemText>
+              />
             </AccordionSummary>
             <AccordionDetails>
               <Box component="p">
