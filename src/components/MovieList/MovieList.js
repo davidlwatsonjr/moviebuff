@@ -107,8 +107,8 @@ function MovieList({ movies, onLoadMore, isLoading, hasMore, page }) {
                       component="span"
                       sx={{ color: "text.primary", display: "block" }}
                     >
-                      {movie.year} &middot; {movie.language.toUpperCase()}{" "}
-                      &middot; ⭐ {movie.rating > 0 ? movie.rating : "N/A"}
+                      {movie.year} &middot; ⭐ {movie.rating} &middot;{" "}
+                      {movie.language.toUpperCase()}
                     </Box>
                     <DownloadLinks links={movie.torrents} />
                   </>
